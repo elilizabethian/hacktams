@@ -23,13 +23,9 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 
 body {
+  margin: 0;
   font-family: 'Nunito', sans-serif;
-  background: #e8f4ff;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  background: #f7fbf6;
 }
 
 /* ── WIDGET SHELL ── */
