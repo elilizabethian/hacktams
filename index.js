@@ -138,17 +138,6 @@ function showBubble(text, duration = 2200) {
 
 function randomOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function spawnHeart() {
-  const scene = document.getElementById('scene');
-  const h = document.createElement('div');
-  h.className = 'heart-particle';
-  h.textContent = ['💖','✨','🌸','⭐'][Math.floor(Math.random()*4)];
-  h.style.left = (30 + Math.random()*30) + '%';
-  h.style.bottom = '80px';
-  scene.appendChild(h);
-  setTimeout(() => h.remove(), 1000);
-}
-
 function addXP(amount) {
   state.xp += amount;
   if (state.xp >= state.xpMax) {
@@ -156,10 +145,6 @@ function addXP(amount) {
     state.level++;
     document.getElementById('level-badge').textContent = '✦ LVL ' + state.level;
     state.xpMax = Math.round(state.xpMax * 1.3);
-    setTimeout(() => {
-      showBubble(randomOf(messages.levelup), 3000);
-      for (let i = 0; i < 5; i++) setTimeout(spawnHeart, i * 200);
-    }, 300);
   }
   document.getElementById('xp-fill').style.width = (state.xp / state.xpMax * 100) + '%';
   document.getElementById('xp-text').textContent = state.xp + '/' + state.xpMax;
@@ -196,7 +181,6 @@ function doAction(action) {
     setStat('happy',  state.happy  + 25);
     setStat('energy', state.energy - 15);
     setStat('hunger', state.hunger - 10);
-    for (let i = 0; i < 3; i++) setTimeout(spawnHeart, i * 400);
     addXP(12);
     setTimeout(endAction, 2800);
 
