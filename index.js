@@ -71,6 +71,12 @@ const DEFAULT_ACTIONS_HTML = `
   <button class="action-btn btn-play" onclick="doAction('play')">🎾 Play</button>
   <button class="action-btn btn-study" onclick="doAction('study')">📖 Study</button>
 `;
+const POMODORO_DEFAULT_SECONDS = 25 * 60;
+const pomodoroState = {
+  remainingSeconds: POMODORO_DEFAULT_SECONDS,
+  timerId: null,
+  isRunning: false,
+};
 
 function getOverlayImg() {
   let img = document.getElementById('pet-img-overlay');
@@ -198,6 +204,69 @@ function updateStatusTag(text) {
   if (statusTag) {
     statusTag.textContent = text;
   }
+}
+
+function formatPomodoroTime(totalSeconds) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+}
+
+function updatePomodoroDisplay() {
+  const timerEl = document.getElementById('pomodoro-time');
+  const phaseEl = document.getElementById('pomodoro-phase');
+  if (timerEl) {
+    timerEl.textContent = formatPomodoroTime(pomodoroState.remainingSeconds);
+  }
+  if (phaseEl) {
+    phaseEl.textContent = pomodoroState.isRunning ? 'Focus Session · Running' : 'Focus Session';
+  }
+}
+
+function startPomodoro() {
+  if (pomodoroState.isRunning) return;
+  pomodoroState.isRunning = true;
+  updatePomodoroDisplay();
+  pomodoroState.timerId = setInterval(() => {
+    if (pomodoroState.remainingSeconds <= 0) {
+      pausePomodoro();
+      showBubble('Focus session complete! 🎉', 2200);
+      updatePomodoroDisplay();
+      return;
+    }
+    pomodoroState.remainingSeconds--;
+    updatePomodoroDisplay();
+  }, 1000);
+}
+
+function pausePomodoro() {
+  pomodoroState.isRunning = false;
+  if (pomodoroState.timerId) {
+    clearInterval(pomodoroState.timerId);
+    pomodoroState.timerId = null;
+  }
+  updatePomodoroDisplay();
+}
+
+function resetPomodoro() {
+  pausePomodoro();
+  pomodoroState.remainingSeconds = POMODORO_DEFAULT_SECONDS;
+  updatePomodoroDisplay();
+}
+
+function enterStudyMode() {
+  const panel = document.querySelector('.panel');
+  if (!panel) return;
+  renderDefaultActions();
+  panel.classList.add('study-active');
+  updatePomodoroDisplay();
+}
+
+function exitStudyMode() {
+  const panel = document.querySelector('.panel');
+  if (!panel) return;
+  panel.classList.remove('study-active');
+  updateStatusTag('● Idle · feeling good');
 }
 
 function setButtonsDisabled(val) {
@@ -328,20 +397,15 @@ function doAction(action) {
     if (state.isBusy) return;
     enterPlayMode();
     return;
+  } else if (action === 'study') {
+    if (state.isBusy) return;
+    enterStudyMode();
+    return;
   }
 
   if (state.isBusy) return;
   state.isBusy = true;
   setButtonsDisabled(true);
-
-  if (action === 'study') {
-    showBubble(randomOf(messages.studying), 3000);
-    updateStatusTag('📖 Studying hard...');
-    setStat('focus',  state.focus  + 30);
-    setStat('hunger', state.hunger - 8);
-    addXP(20);
-    setTimeout(endAction, 3200);
-  }
 }
 
 function endAction() {
@@ -404,3 +468,4 @@ setInterval(() => {
 // Show idle image on load
 initIdleImage();
 initFeedDropTarget();
+updatePomodoroDisplay();
