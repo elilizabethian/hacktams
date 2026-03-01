@@ -78,41 +78,12 @@ body{
   }
 }
 
-
-
-.c1 { width:70px; height:22px; top:28px; left:30px; animation: drift 18s linear infinite; }
-.c1::before { width:30px; height:30px; top:-16px; left:10px; }
-.c1::after  { width:22px; height:22px; top:-12px; left:30px; }
-
-.c2 { width:50px; height:16px; top:55px; right:40px; animation: drift 25s linear infinite reverse; opacity:0.6; }
-.c2::before { width:22px; height:22px; top:-12px; left:6px; }
-.c2::after  { width:16px; height:16px; top:-9px; left:22px; }
-
-.scene.night .cloud { display: none; }
-
-@keyframes drift {
-  from { transform: translateX(-120px); }
-  to   { transform: translateX(420px); }
-}
-
-/* stars */
-.stars { position:absolute; inset:0; pointer-events:none; opacity:0; transition: opacity 1.5s; }
-.scene.night .stars { opacity:1; }
-.star {
-  position:absolute;
-  width:3px; height:3px;
-  background: var(--star);
-  border-radius:50%;
-  animation: twinkle 2s ease-in-out infinite;
-}
-.star:nth-child(2) { animation-delay:.4s; }
-.star:nth-child(3) { animation-delay:.8s; }
-.star:nth-child(4) { animation-delay:1.2s; }
-.star:nth-child(5) { animation-delay:1.6s; }
-
-@keyframes twinkle {
-  0%,100% { opacity:1; transform:scale(1); }
-  50% { opacity:0.3; transform:scale(0.6); }
+.scene{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--sky) 0%, var(--sky-deep) 100%);
+  overflow: hidden;
 }
 
 /* ── PET ── */
@@ -134,11 +105,6 @@ body{
 
 /* SVG hidden once images are loaded */
 .pet svg { display: none; }
-
-/* speech bubble */
-.bubble {}
-.bubble.show {}
-.bubble::after {}
 
 /* ── PANEL BELOW ── */
 .panel {
