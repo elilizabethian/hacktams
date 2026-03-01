@@ -244,6 +244,42 @@ body{
 .btn-play  { background: #c8eef8; color: #1a7a9a; }
 .btn-study { background: #d4f0c4; color: #3a7a24; }
 
+.actions.drag-mode {
+  grid-template-columns: 1fr;
+}
+
+.drag-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(176, 96, 0, 0.35);
+  border-radius: 22px;
+  background: rgba(255, 224, 170, 0.35);
+}
+
+.actions.play-mode .drag-slot {
+  border-color: rgba(26, 122, 154, 0.35);
+  background: rgba(200, 238, 248, 0.45);
+}
+
+.action-draggable {
+  width: 72px;
+  max-width: 78%;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: element;
+}
+
+.action-draggable:active {
+  cursor: grabbing;
+}
+
+.pet.feed-drop-active {
+  outline: 4px dashed rgba(255, 179, 71, 0.8);
+  outline-offset: 8px;
+  border-radius: 16px;
+}
+
 /* status tag */
 .status-tag {
   text-align: center;

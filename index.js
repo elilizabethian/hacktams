@@ -55,6 +55,13 @@ const imageAnim = {
   frameIndex: 0,
   fps: 3, // frames per second — adjust to taste
 };
+const FEED_ICON_SRC = 'assets/feedIcon.png';
+const PLAY_ICON_SRC = 'assets/playIcon.png';
+const DEFAULT_ACTIONS_HTML = `
+  <button class="action-btn btn-feed" onclick="doAction('feed')">🍪 Feed</button>
+  <button class="action-btn btn-play" onclick="doAction('play')">🎾 Play</button>
+  <button class="action-btn btn-study" onclick="doAction('study')">📖 Study</button>
+`;
 
 function getOverlayImg() {
   let img = document.getElementById('pet-img-overlay');
@@ -185,32 +192,139 @@ function setButtonsDisabled(val) {
   document.querySelectorAll('.action-btn').forEach(b => b.disabled = val);
 }
 
+function getActionsContainer() {
+  return document.querySelector('.actions');
+}
+
+function renderDefaultActions() {
+  const actions = getActionsContainer();
+  if (!actions) return;
+  actions.classList.remove('drag-mode');
+  actions.classList.remove('feed-mode');
+  actions.classList.remove('play-mode');
+  actions.innerHTML = DEFAULT_ACTIONS_HTML;
+}
+
+function renderFeedIcons() {
+  renderDragIcons('feed', FEED_ICON_SRC);
+  updateStatusTag('Drag a snack to Pochita');
+}
+
+function renderPlayIcons() {
+  renderDragIcons('play', PLAY_ICON_SRC);
+  updateStatusTag('Drag a toy to Pochita');
+}
+
+function renderDragIcons(actionType, iconSrc) {
+  const actions = getActionsContainer();
+  if (!actions) return;
+
+  actions.classList.add('drag-mode');
+  actions.classList.toggle('feed-mode', actionType === 'feed');
+  actions.classList.toggle('play-mode', actionType === 'play');
+  actions.innerHTML = `
+    <div class="drag-slot"><img class="action-draggable" data-action="${actionType}" src="${iconSrc}" alt="${actionType} icon" draggable="true"></div>
+    <div class="drag-slot"><img class="action-draggable" data-action="${actionType}" src="${iconSrc}" alt="${actionType} icon" draggable="true"></div>
+    <div class="drag-slot"><img class="action-draggable" data-action="${actionType}" src="${iconSrc}" alt="${actionType} icon" draggable="true"></div>
+  `;
+
+  actions.querySelectorAll('.action-draggable').forEach((icon) => {
+    icon.addEventListener('dragstart', onActionDragStart);
+    icon.addEventListener('dragend', onActionDragEnd);
+  });
+}
+
+function onActionDragStart(e) {
+  if (state.isBusy) return;
+  const actionType = e.target.dataset.action;
+  e.dataTransfer.setData('text/plain', actionType || '');
+  e.dataTransfer.effectAllowed = 'move';
+  const pet = document.getElementById('pet');
+  if (pet) pet.classList.add('feed-drop-active');
+}
+
+function onActionDragEnd() {
+  const pet = document.getElementById('pet');
+  if (pet) pet.classList.remove('feed-drop-active');
+}
+
+function isFeedMode() {
+  const actions = getActionsContainer();
+  return !!actions && actions.classList.contains('feed-mode');
+}
+
+function enterFeedMode() {
+  if (state.isBusy) return;
+  renderFeedIcons();
+}
+
+function isPlayMode() {
+  const actions = getActionsContainer();
+  return !!actions && actions.classList.contains('play-mode');
+}
+
+function enterPlayMode() {
+  if (state.isBusy) return;
+  renderPlayIcons();
+}
+
+function executeFeedAction() {
+  if (state.isBusy) return;
+  state.isBusy = true;
+  renderDefaultActions();
+  setButtonsDisabled(true);
+
+  setAnimation('eating');
+  showBubble(randomOf(messages.eating), 2000);
+  updateStatusTag('🍪 Eating a snack...');
+  setStat('hunger', state.hunger + 30);
+  setStat('happy',  state.happy  + 10);
+  addXP(8);
+  setTimeout(endAction, 2200);
+}
+
+function initFeedDropTarget() {
+  const pet = document.getElementById('pet');
+  if (!pet) return;
+
+  pet.addEventListener('dragover', (e) => {
+    if ((!isFeedMode() && !isPlayMode()) || state.isBusy) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  });
+
+  pet.addEventListener('drop', (e) => {
+    if ((!isFeedMode() && !isPlayMode()) || state.isBusy) return;
+    e.preventDefault();
+    const dragType = e.dataTransfer.getData('text/plain');
+    if (dragType !== 'feed' && dragType !== 'play') return;
+    pet.classList.remove('feed-drop-active');
+    if (dragType === 'feed') {
+      executeFeedAction();
+    } else if (dragType === 'play') {
+      executePlayAction();
+    }
+  });
+}
+
 // ── Actions ───────────────────────────────────────────────────
 
 function doAction(action) {
+  if (action === 'feed') {
+    if (state.isBusy) return;
+    enterFeedMode();
+    return;
+  } else if (action === 'play') {
+    if (state.isBusy) return;
+    enterPlayMode();
+    return;
+  }
+
   if (state.isBusy) return;
   state.isBusy = true;
   setButtonsDisabled(true);
 
-  if (action === 'feed') {
-    setAnimation('eating');
-    showBubble(randomOf(messages.eating), 2000);
-    updateStatusTag('🍪 Eating a snack...');
-    setStat('hunger', state.hunger + 30);
-    setStat('happy',  state.happy  + 10);
-    addXP(8);
-    setTimeout(endAction, 2200);
-
-  } else if (action === 'play') {
-    setAnimation('playing');
-    showBubble(randomOf(messages.playing), 2500);
-    updateStatusTag('🎾 Playing around!');
-    setStat('happy',  state.happy  + 25);
-    setStat('hunger', state.hunger - 10);
-    addXP(12);
-    setTimeout(endAction, 2800);
-
-  } else if (action === 'study') {
+  if (action === 'study') {
     showBubble(randomOf(messages.studying), 3000);
     updateStatusTag('📖 Studying hard...');
     setStat('focus',  state.focus  + 30);
@@ -222,9 +336,25 @@ function doAction(action) {
 
 function endAction() {
   state.isBusy = false;
+  renderDefaultActions();
   setButtonsDisabled(false);
   hidePetImage();
   updateStatusTag('● Idle · feeling good');
+}
+
+function executePlayAction() {
+  if (state.isBusy) return;
+  state.isBusy = true;
+  renderDefaultActions();
+  setButtonsDisabled(true);
+
+  setAnimation('playing');
+  showBubble(randomOf(messages.playing), 2500);
+  updateStatusTag('🎾 Playing around!');
+  setStat('happy',  state.happy  + 25);
+  setStat('hunger', state.hunger - 10);
+  addXP(12);
+  setTimeout(endAction, 2800);
 }
 
 function petTap() {
@@ -263,3 +393,4 @@ setInterval(() => {
 
 // Show idle image on load
 initIdleImage();
+initFeedDropTarget();
