@@ -11,12 +11,14 @@ const petImages = {
   eating: [
     'assets/eat1.png',
     'assets/eat2.png',
-    'assets/eat3.png'
+    'assets/eat3.png',
+    'assets/eat4.png'
   ],
   playing: [
     'assets/play1.png',
     'assets/play2.png',
-    'assets/play3.png'
+    'assets/play3.png',
+    'assets/play4.png'
   ],
   petting: [
     'assets/pet1.png',
