@@ -1,6 +1,12 @@
-
+// ============================================================
+//  🖼️  PASTE YOUR IMAGE URLs HERE
+//  - idle:    ONE URL shown whenever the pet is doing nothing
+//  - eating / playing / petting: frames played in order as an
+//    animation, then the idle image is restored automatically.
+//  Leave an action array empty [] to keep the current image.
+// ============================================================
 const petImages = {
-  idle: "idle.png",    // paste ONE idle image URL between the quotes
+  idle: "idle.png",
 
   eating: [
     'assets/eat1.png',
@@ -23,7 +29,6 @@ const petImages = {
 const state = {
   hunger: 60, happy: 75, energy: 80, focus: 50,
   xp: 45, xpMax: 100, level: 3,
-  mood: 'idle', // idle, eating, playing, studying, sleeping, happy
   isBusy: false,
   tapCount: 0
 };
@@ -41,15 +46,14 @@ const messages = {
   levelup:  ["I LEVELED UP!! 🎊", "Look at me grow! ⭐", "Woohoo!! 🎉"]
 };
 
-// ── Image animation helpers ───────────────────────────────────
+// ── Image animation ───────────────────────────────────────────
 
 const imageAnim = {
-  frameInterval: null,  // holds the setInterval reference
+  frameInterval: null,
   frameIndex: 0,
-  fps: 3,               // frames per second — adjust to taste
+  fps: 3, // frames per second — adjust to taste
 };
 
-// Returns (or creates) the single overlay <img> element
 function getOverlayImg() {
   let img = document.getElementById('pet-img-overlay');
   if (!img) {
@@ -60,31 +64,28 @@ function getOverlayImg() {
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       pointer-events: none;
+      z-index: 2;
     `;
-    document.getElementById('pet').appendChild(img);
+    document.getElementById('scene').appendChild(img);
   }
   return img;
 }
 
-// Call once on page load to show the idle image (hides SVG if URL provided)
 function initIdleImage() {
   if (!petImages.idle) return;
-  const petEl = document.getElementById('pet');
-  petEl.querySelector('svg').style.display = 'none';
   const img = getOverlayImg();
   img.src = petImages.idle;
   img.style.display = 'block';
 }
 
-// Play an action's frames in order, then restore idle when done
-function showPetImage(action) {
+function setAnimation(action) {
   const urls = petImages[action];
-  if (!urls || urls.length === 0) return; // no frames, keep current look
+  if (!urls || urls.length === 0) return;
 
   const img = getOverlayImg();
-  img.style.display = 'block'; // make sure overlay is visible
+  img.style.display = 'block';
   clearInterval(imageAnim.frameInterval);
   imageAnim.frameIndex = 0;
   img.src = urls[0];
@@ -97,25 +98,20 @@ function showPetImage(action) {
   }
 }
 
-// Stop animation and return to idle image (or SVG if no idle URL)
 function hidePetImage() {
   clearInterval(imageAnim.frameInterval);
   imageAnim.frameInterval = null;
-  const petEl = document.getElementById('pet');
 
   if (petImages.idle) {
-    // Restore idle image
     const img = getOverlayImg();
     img.src = petImages.idle;
   } else {
-    // No idle image — fall back to SVG
-    petEl.querySelector('svg').style.display = '';
     const img = document.getElementById('pet-img-overlay');
     if (img) img.style.display = 'none';
   }
 }
 
-// ── Existing helpers (unchanged) ─────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────
 
 function setStat(name, val) {
   val = Math.max(0, Math.min(100, val));
@@ -132,30 +128,6 @@ function showBubble(text, duration = 2200) {
 }
 
 function randomOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-function setAnimation(anim) {
-  const pet = document.getElementById('pet');
-  pet.className = 'pet' + (anim ? ' ' + anim : '');
-}
-
-function setEyes(type) {
-  document.getElementById('eyes-normal').style.display = type === 'normal' ? '' : 'none';
-  document.getElementById('eyes-sleep').style.display  = type === 'sleep'  ? '' : 'none';
-  document.getElementById('eyes-happy').style.display  = type === 'happy'  ? '' : 'none';
-}
-
-function setMouth(type) {
-  document.getElementById('mouth-normal').style.display = type === 'normal' ? '' : 'none';
-  document.getElementById('mouth-sad').style.display    = type === 'sad'    ? '' : 'none';
-}
-
-function setGlasses(show) {
-  document.getElementById('glasses').style.display = show ? '' : 'none';
-}
-
-function setScene(night) {
-  document.getElementById('scene').classList.toggle('night', night);
-}
 
 function spawnHeart() {
   const scene = document.getElementById('scene');
@@ -177,8 +149,6 @@ function addXP(amount) {
     state.xpMax = Math.round(state.xpMax * 1.3);
     setTimeout(() => {
       showBubble(randomOf(messages.levelup), 3000);
-      setAnimation('happy');
-      setEyes('happy');
       for (let i = 0; i < 5; i++) setTimeout(spawnHeart, i * 200);
     }, 300);
   }
@@ -203,9 +173,6 @@ function doAction(action) {
 
   if (action === 'feed') {
     setAnimation('eating');
-    setEyes('happy');
-    setGlasses(false);
-    showPetImage('eating');
     showBubble(randomOf(messages.eating), 2000);
     updateStatusTag('🍪 Eating a snack...');
     setStat('hunger', state.hunger + 30);
@@ -215,10 +182,6 @@ function doAction(action) {
 
   } else if (action === 'play') {
     setAnimation('playing');
-    setEyes('happy');
-    setGlasses(false);
-    setScene(false);
-    showPetImage('playing');
     showBubble(randomOf(messages.playing), 2500);
     updateStatusTag('🎾 Playing around!');
     setStat('happy',  state.happy  + 25);
@@ -229,9 +192,6 @@ function doAction(action) {
     setTimeout(endAction, 2800);
 
   } else if (action === 'study') {
-    setAnimation('studying');
-    setEyes('normal');
-    setGlasses(true);
     showBubble(randomOf(messages.studying), 3000);
     updateStatusTag('📖 Studying hard...');
     setStat('focus',  state.focus  + 30);
@@ -241,48 +201,20 @@ function doAction(action) {
     setTimeout(endAction, 3200);
 
   } else if (action === 'sleep') {
-    setAnimation('sleeping');
-    setEyes('sleep');
-    setGlasses(false);
-    setScene(true);
     showBubble(randomOf(messages.sleeping), 3500);
     updateStatusTag('💤 Taking a nap...');
     setStat('energy', state.energy + 40);
     setStat('hunger', state.hunger - 5);
-    ['zzz1','zzz2'].forEach((id, i) => {
-      const el = document.getElementById(id);
-      setTimeout(() => {
-        el.classList.add('show');
-        setTimeout(() => el.classList.remove('show'), 1800);
-      }, i * 700);
-    });
     addXP(5);
-    setTimeout(() => { setScene(false); endAction(); }, 4000);
+    setTimeout(endAction, 4000);
   }
 }
 
 function endAction() {
   state.isBusy = false;
   setButtonsDisabled(false);
-  setGlasses(false);
-  hidePetImage(); // restore SVG when action ends
-
-  if (state.happy < 30) {
-    setAnimation('');
-    setEyes('normal');
-    setMouth('sad');
-    updateStatusTag('😢 Feeling lonely...');
-  } else if (state.energy < 20) {
-    setAnimation('');
-    setEyes('sleep');
-    setMouth('normal');
-    updateStatusTag('😴 Really sleepy...');
-  } else {
-    setAnimation('');
-    setEyes('normal');
-    setMouth('normal');
-    updateStatusTag('● Idle · feeling good');
-  }
+  hidePetImage();
+  updateStatusTag('● Idle · feeling good');
 }
 
 function petTap() {
@@ -292,16 +224,10 @@ function petTap() {
   setStat('happy', state.happy + 5);
 
   if (state.tapCount % 5 === 0) {
-    showPetImage('petting');
-    setAnimation('happy');
-    setEyes('happy');
+    setAnimation('petting');
     showBubble(randomOf(messages.happy), 2000);
     addXP(3);
-    setTimeout(() => {
-      hidePetImage();
-      setAnimation('');
-      setEyes('normal');
-    }, 2200);
+    setTimeout(hidePetImage, 2200);
   } else {
     showBubble(randomOf(messages.idle), 1800);
   }
@@ -327,5 +253,5 @@ setInterval(() => {
   }
 }, 15000);
 
-// Show idle image on load (replaces SVG if a URL is provided)
+// Show idle image on load
 initIdleImage();

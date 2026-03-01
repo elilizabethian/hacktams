@@ -118,45 +118,22 @@ body{
 /* ── PET ── */
 .pet-wrap {
   position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
 .pet {
-  width: 90px;
-  height: 90px;
+  width: 100%;
+  height: 100%;
   position: relative;
-  animation: bob 2.4s ease-in-out infinite;
-  filter: drop-shadow(0 6px 12px rgba(46,36,24,0.18));
 }
 
-@keyframes bob {
-  0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
-}
-
-.pet.eating { animation: chomp 0.3s ease-in-out infinite alternate; }
-@keyframes chomp { from { transform:scaleY(1); } to { transform:scaleY(0.92) scaleX(1.05); } }
-
-.pet.playing { animation: spin 0.6s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.pet.sleeping { animation: snooze 3s ease-in-out infinite; }
-@keyframes snooze { 0%,100% { transform:rotate(-4deg) translateY(2px); } 50% { transform:rotate(4deg) translateY(2px); } }
-
-.pet.studying { animation: nod 1s ease-in-out infinite; }
-@keyframes nod { 0%,100% { transform:translateY(0) rotate(0); } 50% { transform:translateY(-2px) rotate(-5deg); } }
-
-.pet.happy { animation: bounce 0.4s ease-in-out infinite alternate; }
-@keyframes bounce { from { transform:translateY(0) scale(1); } to { transform:translateY(-10px) scale(1.05); } }
-
-/* SVG pet body */
-.pet svg { width:90px; height:90px; }
+/* SVG hidden once images are loaded */
+.pet svg { display: none; }
 
 /* speech bubble */
 .bubble {}
