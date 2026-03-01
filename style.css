@@ -252,14 +252,6 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px dashed rgba(176, 96, 0, 0.35);
-  border-radius: 22px;
-  background: rgba(255, 224, 170, 0.35);
-}
-
-.actions.play-mode .drag-slot {
-  border-color: rgba(26, 122, 154, 0.35);
-  background: rgba(200, 238, 248, 0.45);
 }
 
 .action-draggable {
@@ -313,11 +305,17 @@ body{
 /* Heart/emoji particles */
 .heart-particle {
   position: absolute;
-  font-size: 2rem;
   pointer-events: none;
   z-index: 10;
   transform: translate(-50%, -50%);
   animation: heart-burst 0.9s ease-out forwards;
+}
+
+.heart-particle img {
+  width: 34px;
+  height: 34px;
+  display: block;
+  object-fit: contain;
 }
 
 @keyframes heart-burst {

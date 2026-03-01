@@ -12,13 +12,21 @@ const petImages = {
     'assets/eat1.png',
     'assets/eat2.png',
     'assets/eat3.png',
-    'assets/eat4.png'
+    'assets/eat4.png',
+    'assets/eat5.png',
+    'assets/eat6.png',
+    'assets/eat7.png'
   ],
   playing: [
     'assets/play1.png',
     'assets/play2.png',
     'assets/play3.png',
-    'assets/play4.png'
+    'assets/play4.png',
+    'assets/play5.png',
+    'assets/play6.png',
+    'assets/play7.png',
+    'assets/play8.png',
+    'assets/play8.png',
   ],
   petting: [
     'assets/pet1.png',
@@ -27,6 +35,7 @@ const petImages = {
     'assets/pet2.png',
     'assets/pet1.png'
   ],
+
 };
 // ============================================================
 
@@ -140,7 +149,10 @@ function spawnHeart() {
   const scene = document.getElementById('scene');
   const h = document.createElement('div');
   h.className = 'heart-particle';
-  h.textContent = ['💖','✨','🌸','⭐','💕','🌟'][Math.floor(Math.random()*6)];
+  const img = document.createElement('img');
+  img.src = 'assets/heart.png';
+  img.alt = '';
+  h.appendChild(img);
   const angle = Math.random() * 2 * Math.PI;
   const radius = 15 + Math.random() * 20;
   h.style.left = (50 + Math.cos(angle) * radius * 0.7) + '%';
@@ -223,8 +235,6 @@ function renderDragIcons(actionType, iconSrc) {
   actions.classList.toggle('feed-mode', actionType === 'feed');
   actions.classList.toggle('play-mode', actionType === 'play');
   actions.innerHTML = `
-    <div class="drag-slot"><img class="action-draggable" data-action="${actionType}" src="${iconSrc}" alt="${actionType} icon" draggable="true"></div>
-    <div class="drag-slot"><img class="action-draggable" data-action="${actionType}" src="${iconSrc}" alt="${actionType} icon" draggable="true"></div>
     <div class="drag-slot"><img class="action-draggable" data-action="${actionType}" src="${iconSrc}" alt="${actionType} icon" draggable="true"></div>
   `;
 
