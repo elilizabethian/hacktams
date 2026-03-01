@@ -22,53 +22,35 @@
         </div>
         <div class="right">
             <div class="panel">
-
-                <div class="pet-header">
-                    <div class="pet-name">Pochita <span>Chainsaw Devil</span></div>
-                    <div class="level-badge" id="level-badge">✦ LVL 0</div>
-                </div>
-
-                <!-- XP -->
-                <div class="xp-row">
-                    <div class="xp-label">XP</div>
-                    <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:45%"></div></div>
-                    <div class="xp-next" id="xp-text">45/100</div>
-                </div>
-
-                <!-- STATS -->
-                <div class="stats">
-                    <div class="stat-row">
-                        <div class="stat-icon">🍪</div>
-                        <div class="stat-label">Hunger</div>
-                        <div class="bar-track"><div class="bar-fill hunger" id="bar-hunger" style="width:60%"></div></div>
-                        <div class="stat-val" id="val-hunger">60</div>
+                <div class="panel-main">
+                    <!-- STATS -->
+                    <div class="stats">
+                        <div class="stat-row">
+                            <div class="stat-icon">🍪</div>
+                            <div class="stat-label">Hunger</div>
+                            <div class="bar-track"><div class="bar-fill hunger" id="bar-hunger" style="width:60%"></div></div>
+                            <div class="stat-val" id="val-hunger">60</div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-icon">💖</div>
+                            <div class="stat-label">Happy</div>
+                            <div class="bar-track"><div class="bar-fill happy" id="bar-happy" style="width:75%"></div></div>
+                            <div class="stat-val" id="val-happy">75</div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-label">Focus</div>
+                            <div class="bar-track"><div class="bar-fill focus" id="bar-focus" style="width:50%"></div></div>
+                            <div class="stat-val" id="val-focus">50</div>
+                        </div>
                     </div>
-                    <div class="stat-row">
-                        <div class="stat-icon">💖</div>
-                        <div class="stat-label">Happy</div>
-                        <div class="bar-track"><div class="bar-fill happy" id="bar-happy" style="width:75%"></div></div>
-                        <div class="stat-val" id="val-happy">75</div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-icon">⚡</div>
-                        <div class="stat-label">Energy</div>
-                        <div class="bar-track"><div class="bar-fill energy" id="bar-energy" style="width:80%"></div></div>
-                        <div class="stat-val" id="val-energy">80</div>
-                    </div>
-                    <div class="stat-row">
-                        <div class="stat-icon">📚</div>
-                        <div class="stat-label">Focus</div>
-                        <div class="bar-track"><div class="bar-fill focus" id="bar-focus" style="width:50%"></div></div>
-                        <div class="stat-val" id="val-focus">50</div>
-                    </div>
-                </div>
 
-                <!-- ACTIONS -->
-                <div class="actions">
-                    <button class="action-btn btn-feed"  onclick="doAction('feed')">🍪 Feed</button>
-                    <button class="action-btn btn-play"  onclick="doAction('play')">🎾 Play</button>
-                    <button class="action-btn btn-study" onclick="doAction('study')">📖 Study</button>
-                    <button class="action-btn btn-sleep" onclick="doAction('sleep')">🌙 Sleep</button>
+                    <!-- ACTIONS -->
+                    <div class="actions">
+                        <button class="action-btn btn-feed"  onclick="doAction('feed')">🍪 Feed</button>
+                        <button class="action-btn btn-play"  onclick="doAction('play')">🎾 Play</button>
+                        <button class="action-btn btn-study" onclick="doAction('study')">📖 Study</button>
+                    </div>
                 </div>
 
                 <div class="status-tag" id="status-tag">● Idle · feeling good</div>

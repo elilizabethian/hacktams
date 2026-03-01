@@ -21,15 +21,17 @@ const petImages = {
     'assets/play4.png'
   ],
   petting: [
+    'assets/pet1.png',
     'assets/pet2.png',
     'assets/pet3.png',
     'assets/pet2.png',
+    'assets/pet1.png'
   ],
 };
 // ============================================================
 
 const state = {
-  hunger: 60, happy: 75, energy: 80, focus: 50,
+  hunger: 60, happy: 75, focus: 50,
   xp: 45, xpMax: 100, level: 3,
   isBusy: false,
   tapCount: 0
@@ -38,12 +40,10 @@ const state = {
 const messages = {
   idle:     ["I'm bored... 🥺", "Pet me! 🐾", "Wanna study together? 📚", "Can I have a snack? 🍪"],
   hungry:   ["Feed me please! 😿", "My tummy's rumbling... 🍽️", "Cookie? 🍪"],
-  tired:    ["So sleepy... 😴", "Need a nap... 💤", "Zzzz..."],
   sad:      ["I feel lonely 😢", "Play with me? 🎾", "Cheer me up? 💔"],
   eating:   ["Nom nom nom! 😋", "Yummy!! ✨", "More please! 🍪"],
   playing:  ["Wheee!! 🎉", "This is SO fun! 🎾", "Yay yay yay! ⭐"],
   studying: ["Learning hard! 🧠", "Almost got it...📖", "Focus focus... 🎯"],
-  sleeping: ["zzz... 💤", "Dreaming of fish... 🐟", "Do not disturb! 🌙"],
   happy:    ["I love you!! 💖", "Best day ever! ✨", "Squeee! 🌸"],
   levelup:  ["I LEVELED UP!! 🎊", "Look at me grow! ⭐", "Woohoo!! 🎉"]
 };
@@ -158,15 +158,27 @@ function addXP(amount) {
   if (state.xp >= state.xpMax) {
     state.xp -= state.xpMax;
     state.level++;
-    document.getElementById('level-badge').textContent = '✦ LVL ' + state.level;
+    const levelBadge = document.getElementById('level-badge');
+    if (levelBadge) {
+      levelBadge.textContent = '✦ LVL ' + state.level;
+    }
     state.xpMax = Math.round(state.xpMax * 1.3);
   }
-  document.getElementById('xp-fill').style.width = (state.xp / state.xpMax * 100) + '%';
-  document.getElementById('xp-text').textContent = state.xp + '/' + state.xpMax;
+  const xpFill = document.getElementById('xp-fill');
+  const xpText = document.getElementById('xp-text');
+  if (xpFill) {
+    xpFill.style.width = (state.xp / state.xpMax * 100) + '%';
+  }
+  if (xpText) {
+    xpText.textContent = state.xp + '/' + state.xpMax;
+  }
 }
 
 function updateStatusTag(text) {
-  document.getElementById('status-tag').textContent = text;
+  const statusTag = document.getElementById('status-tag');
+  if (statusTag) {
+    statusTag.textContent = text;
+  }
 }
 
 function setButtonsDisabled(val) {
@@ -194,7 +206,6 @@ function doAction(action) {
     showBubble(randomOf(messages.playing), 2500);
     updateStatusTag('🎾 Playing around!');
     setStat('happy',  state.happy  + 25);
-    setStat('energy', state.energy - 15);
     setStat('hunger', state.hunger - 10);
     addXP(12);
     setTimeout(endAction, 2800);
@@ -203,18 +214,9 @@ function doAction(action) {
     showBubble(randomOf(messages.studying), 3000);
     updateStatusTag('📖 Studying hard...');
     setStat('focus',  state.focus  + 30);
-    setStat('energy', state.energy - 10);
     setStat('hunger', state.hunger - 8);
     addXP(20);
     setTimeout(endAction, 3200);
-
-  } else if (action === 'sleep') {
-    showBubble(randomOf(messages.sleeping), 3500);
-    updateStatusTag('💤 Taking a nap...');
-    setStat('energy', state.energy + 40);
-    setStat('hunger', state.hunger - 5);
-    addXP(5);
-    setTimeout(endAction, 4000);
   }
 }
 
@@ -246,7 +248,6 @@ setInterval(() => {
   if (!state.isBusy) {
     setStat('hunger', state.hunger - 3);
     setStat('happy',  state.happy  - 2);
-    setStat('energy', state.energy - 1);
   }
 }, 30000);
 
@@ -255,7 +256,6 @@ setInterval(() => {
   if (!state.isBusy) {
     let pool = messages.idle;
     if (state.hunger < 30) pool = messages.hungry;
-    else if (state.energy < 30) pool = messages.tired;
     else if (state.happy < 30) pool = messages.sad;
     showBubble(randomOf(pool), 2000);
   }
