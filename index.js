@@ -21,9 +21,9 @@ const petImages = {
     'assets/play4.png'
   ],
   petting: [
-    'assets/pet1.png',
     'assets/pet2.png',
     'assets/pet3.png',
+    'assets/pet2.png',
   ],
 };
 // ============================================================
@@ -53,7 +53,7 @@ const messages = {
 const imageAnim = {
   frameInterval: null,
   frameIndex: 0,
-  fps: 2, // frames per second — adjust to taste
+  fps: 3, // frames per second — adjust to taste
 };
 
 function getOverlayImg() {
