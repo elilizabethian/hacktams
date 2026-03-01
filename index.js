@@ -6,7 +6,7 @@
 //  Leave an action array empty [] to keep the current image.
 // ============================================================
 const petImages = {
-  idle: "idle.png",
+  idle: "assets/idle.png",
 
   eating: [
     'assets/eat1.png',
