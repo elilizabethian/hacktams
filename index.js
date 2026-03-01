@@ -1,3 +1,25 @@
+
+const petImages = {
+  idle: "idle.png",    // paste ONE idle image URL between the quotes
+
+  eating: [
+    'assets/eat1.png',
+    'assets/eat2.png',
+    'assets/eat3.png'
+  ],
+  playing: [
+    'assets/play1.png',
+    'assets/play2.png',
+    'assets/play3.png'
+  ],
+  petting: [
+    'assets/pet1.png',
+    'assets/pet2.png',
+    'assets/pet3.png',
+  ],
+};
+// ============================================================
+
 const state = {
   hunger: 60, happy: 75, energy: 80, focus: 50,
   xp: 45, xpMax: 100, level: 3,
@@ -18,6 +40,82 @@ const messages = {
   happy:    ["I love you!! 💖", "Best day ever! ✨", "Squeee! 🌸"],
   levelup:  ["I LEVELED UP!! 🎊", "Look at me grow! ⭐", "Woohoo!! 🎉"]
 };
+
+// ── Image animation helpers ───────────────────────────────────
+
+const imageAnim = {
+  frameInterval: null,  // holds the setInterval reference
+  frameIndex: 0,
+  fps: 3,               // frames per second — adjust to taste
+};
+
+// Returns (or creates) the single overlay <img> element
+function getOverlayImg() {
+  let img = document.getElementById('pet-img-overlay');
+  if (!img) {
+    img = document.createElement('img');
+    img.id = 'pet-img-overlay';
+    img.style.cssText = `
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    `;
+    document.getElementById('pet').appendChild(img);
+  }
+  return img;
+}
+
+// Call once on page load to show the idle image (hides SVG if URL provided)
+function initIdleImage() {
+  if (!petImages.idle) return;
+  const petEl = document.getElementById('pet');
+  petEl.querySelector('svg').style.display = 'none';
+  const img = getOverlayImg();
+  img.src = petImages.idle;
+  img.style.display = 'block';
+}
+
+// Play an action's frames in order, then restore idle when done
+function showPetImage(action) {
+  const urls = petImages[action];
+  if (!urls || urls.length === 0) return; // no frames, keep current look
+
+  const img = getOverlayImg();
+  img.style.display = 'block'; // make sure overlay is visible
+  clearInterval(imageAnim.frameInterval);
+  imageAnim.frameIndex = 0;
+  img.src = urls[0];
+
+  if (urls.length > 1) {
+    imageAnim.frameInterval = setInterval(() => {
+      imageAnim.frameIndex = (imageAnim.frameIndex + 1) % urls.length;
+      img.src = urls[imageAnim.frameIndex];
+    }, 1000 / imageAnim.fps);
+  }
+}
+
+// Stop animation and return to idle image (or SVG if no idle URL)
+function hidePetImage() {
+  clearInterval(imageAnim.frameInterval);
+  imageAnim.frameInterval = null;
+  const petEl = document.getElementById('pet');
+
+  if (petImages.idle) {
+    // Restore idle image
+    const img = getOverlayImg();
+    img.src = petImages.idle;
+  } else {
+    // No idle image — fall back to SVG
+    petEl.querySelector('svg').style.display = '';
+    const img = document.getElementById('pet-img-overlay');
+    if (img) img.style.display = 'none';
+  }
+}
+
+// ── Existing helpers (unchanged) ─────────────────────────────
 
 function setStat(name, val) {
   val = Math.max(0, Math.min(100, val));
@@ -96,6 +194,8 @@ function setButtonsDisabled(val) {
   document.querySelectorAll('.action-btn').forEach(b => b.disabled = val);
 }
 
+// ── Actions ───────────────────────────────────────────────────
+
 function doAction(action) {
   if (state.isBusy) return;
   state.isBusy = true;
@@ -105,6 +205,7 @@ function doAction(action) {
     setAnimation('eating');
     setEyes('happy');
     setGlasses(false);
+    showPetImage('eating');
     showBubble(randomOf(messages.eating), 2000);
     updateStatusTag('🍪 Eating a snack...');
     setStat('hunger', state.hunger + 30);
@@ -117,6 +218,7 @@ function doAction(action) {
     setEyes('happy');
     setGlasses(false);
     setScene(false);
+    showPetImage('playing');
     showBubble(randomOf(messages.playing), 2500);
     updateStatusTag('🎾 Playing around!');
     setStat('happy',  state.happy  + 25);
@@ -147,7 +249,6 @@ function doAction(action) {
     updateStatusTag('💤 Taking a nap...');
     setStat('energy', state.energy + 40);
     setStat('hunger', state.hunger - 5);
-    // animate zzz
     ['zzz1','zzz2'].forEach((id, i) => {
       const el = document.getElementById(id);
       setTimeout(() => {
@@ -164,8 +265,8 @@ function endAction() {
   state.isBusy = false;
   setButtonsDisabled(false);
   setGlasses(false);
+  hidePetImage(); // restore SVG when action ends
 
-  // decide idle look based on stats
   if (state.happy < 30) {
     setAnimation('');
     setEyes('normal');
@@ -191,11 +292,16 @@ function petTap() {
   setStat('happy', state.happy + 5);
 
   if (state.tapCount % 5 === 0) {
+    showPetImage('petting');
     setAnimation('happy');
     setEyes('happy');
     showBubble(randomOf(messages.happy), 2000);
     addXP(3);
-    setTimeout(() => { setAnimation(''); setEyes('normal'); }, 2200);
+    setTimeout(() => {
+      hidePetImage();
+      setAnimation('');
+      setEyes('normal');
+    }, 2200);
   } else {
     showBubble(randomOf(messages.idle), 1800);
   }
@@ -220,3 +326,6 @@ setInterval(() => {
     showBubble(randomOf(pool), 2000);
   }
 }, 15000);
+
+// Show idle image on load (replaces SVG if a URL is provided)
+initIdleImage();

@@ -25,8 +25,7 @@
   --font-size-medium: 1.5635rem;
 
   /* Images */
-  --image-path-background: url('assets/main-bg.png');
-  --image-path-content: url('assets/image-content/image-1.png');
+  --image-path-background: url('assets/background');
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -80,19 +79,7 @@ body{
 }
 
 
-/* clouds */
-.cloud {
-  position: absolute;
-  background: white;
-  border-radius: 50px;
-  opacity: 0.85;
-}
-.cloud::before, .cloud::after {
-  content: '';
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-}
+
 .c1 { width:70px; height:22px; top:28px; left:30px; animation: drift 18s linear infinite; }
 .c1::before { width:30px; height:30px; top:-16px; left:10px; }
 .c1::after  { width:22px; height:22px; top:-12px; left:30px; }
@@ -172,50 +159,9 @@ body{
 .pet svg { width:90px; height:90px; }
 
 /* speech bubble */
-.bubble {
-  position: absolute;
-  bottom: 106px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  border-radius: 16px;
-  padding: 8px 14px;
-  font-size: var(--font-size-medium);
-  font-weight: 700;
-  color: var(--ink);
-  white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(46,36,24,0.12);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  transform: translateX(-50%) translateY(6px);
-  z-index: 5;
-}
-.bubble.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-.bubble::after {
-  content: '';
-  position: absolute;
-  top: 100%; left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: white;
-}
-
-/* hearts */
-.heart-particle {
-  position: absolute;
-  font-size: 16px;
-  opacity:0;
-  pointer-events:none;
-  animation: heartFloat 1s ease-out forwards;
-}
-@keyframes heartFloat {
-  0%   { opacity:1; transform:translateY(0) scale(1); }
-  100% { opacity:0; transform:translateY(-50px) scale(1.4); }
-}
+.bubble {}
+.bubble.show {}
+.bubble::after {}
 
 /* ── PANEL BELOW ── */
 .panel {
