@@ -51,7 +51,7 @@ const messages = {
 const imageAnim = {
   frameInterval: null,
   frameIndex: 0,
-  fps: 3, // frames per second — adjust to taste
+  fps: 2, // frames per second — adjust to taste
 };
 
 function getOverlayImg() {
@@ -64,7 +64,7 @@ function getOverlayImg() {
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       pointer-events: none;
       z-index: 2;
     `;
@@ -90,9 +90,16 @@ function setAnimation(action) {
   imageAnim.frameIndex = 0;
   img.src = urls[0];
 
+  // Play through frames once, then restore idle
   if (urls.length > 1) {
     imageAnim.frameInterval = setInterval(() => {
-      imageAnim.frameIndex = (imageAnim.frameIndex + 1) % urls.length;
+      imageAnim.frameIndex++;
+      if (imageAnim.frameIndex >= urls.length) {
+        clearInterval(imageAnim.frameInterval);
+        imageAnim.frameInterval = null;
+        hidePetImage();
+        return;
+      }
       img.src = urls[imageAnim.frameIndex];
     }, 1000 / imageAnim.fps);
   }
