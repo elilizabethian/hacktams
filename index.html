@@ -2,137 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!--loads website to the width of device -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Pochita — Your Study Buddy 🐣</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <title>Pochita — Your Study Buddy 🐣</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app">
         <div class="left">
+            <div class="scene" id="scene">
 
-        <!-- SCENE -->
-        <div class="scene" id="scene">
+                <!-- PET -->
+                <div class="pet-wrap">
+                    <div class="bubble" id="bubble">Hello! 👋</div>
+                    <div class="pet" id="pet" onclick="petTap()"></div>
+                </div>
 
-            <div class="sun"></div>
-            <div class="moon"></div>
-
-            <div class="stars">
-            <div class="star" style="top:15%;left:12%"></div>
-            <div class="star" style="top:25%;left:55%"></div>
-            <div class="star" style="top:10%;left:75%"></div>
-            <div class="star" style="top:40%;left:30%"></div>
-            <div class="star" style="top:30%;left:85%"></div>
             </div>
-
-            <div class="cloud c1"></div>
-            <div class="cloud c2"></div>
-
-            <!-- PET -->
-            <div class="pet-wrap">
-            <div class="bubble" id="bubble">Hello! 👋</div>
-
-            <div class="pet" id="pet" onclick="petTap()">
-                <!-- Cute round SVG cat/blob pet -->
-                <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
-                <!-- ears -->
-                <ellipse cx="24" cy="22" rx="10" ry="13" fill="#f5d0a0" transform="rotate(-15 24 22)"/>
-                <ellipse cx="66" cy="22" rx="10" ry="13" fill="#f5d0a0" transform="rotate(15 66 22)"/>
-                <ellipse cx="24" cy="22" rx="5" ry="8" fill="#f5b8b8" transform="rotate(-15 24 22)"/>
-                <ellipse cx="66" cy="22" rx="5" ry="8" fill="#f5b8b8" transform="rotate(15 66 22)"/>
-                <!-- body -->
-                <ellipse cx="45" cy="52" rx="32" ry="30" fill="#fde8c8"/>
-                <!-- cheeks -->
-                <ellipse cx="26" cy="57" rx="8" ry="5" fill="#f5b8b8" opacity="0.6"/>
-                <ellipse cx="64" cy="57" rx="8" ry="5" fill="#f5b8b8" opacity="0.6"/>
-                <!-- eyes -->
-                <g id="eyes-normal">
-                    <circle cx="34" cy="48" r="5.5" fill="#2e2418"/>
-                    <circle cx="56" cy="48" r="5.5" fill="#2e2418"/>
-                    <circle cx="36" cy="46" r="1.8" fill="white"/>
-                    <circle cx="58" cy="46" r="1.8" fill="white"/>
-                </g>
-                <!-- sleep eyes (hidden by default) -->
-                <g id="eyes-sleep" display="none">
-                    <path d="M29 48 Q34 44 39 48" stroke="#2e2418" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M51 48 Q56 44 61 48" stroke="#2e2418" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                </g>
-                <!-- happy eyes (hidden) -->
-                <g id="eyes-happy" display="none">
-                    <path d="M29 50 Q34 43 39 50" stroke="#2e2418" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M51 50 Q56 43 61 50" stroke="#2e2418" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                </g>
-                <!-- nose -->
-                <ellipse cx="45" cy="55" rx="2.5" ry="1.8" fill="#e8a0a0"/>
-                <!-- mouth -->
-                <path id="mouth-normal" d="M40 60 Q45 65 50 60" stroke="#e8a0a0" stroke-width="2" fill="none" stroke-linecap="round"/>
-                <path id="mouth-sad" d="M40 63 Q45 59 50 63" stroke="#e8a0a0" stroke-width="2" fill="none" stroke-linecap="round" display="none"/>
-                <!-- study glasses -->
-                <g id="glasses" display="none" opacity="0.85">
-                    <rect x="27" y="43" width="16" height="12" rx="5" fill="none" stroke="#888" stroke-width="1.8"/>
-                    <rect x="47" y="43" width="16" height="12" rx="5" fill="none" stroke="#888" stroke-width="1.8"/>
-                    <line x1="43" y1="49" x2="47" y2="49" stroke="#888" stroke-width="1.8"/>
-                </g>
-                <!-- tail -->
-                <path d="M73 65 Q88 50 80 42" stroke="#f5c890" stroke-width="7" fill="none" stroke-linecap="round"/>
-                </svg>
-            </div>
-
-
-            <div class="ground"><div class="ground-stripe"></div></div>
-        </div>
         </div>
         <div class="right">
-            <!-- PANEL -->
             <div class="panel">
 
                 <div class="pet-header">
-                <div class="pet-name"> Pochita <span> Chainsaw Devil </span></div>
-                <div class="level-badge" id="level-badge">✦ LVL 0</div>
+                    <div class="pet-name">Pochita <span>Chainsaw Devil</span></div>
+                    <div class="level-badge" id="level-badge">✦ LVL 0</div>
                 </div>
 
                 <!-- XP -->
                 <div class="xp-row">
-                <div class="xp-label">XP</div>
-                <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:45%"></div></div>
-                <div class="xp-next" id="xp-text">45/100</div>
+                    <div class="xp-label">XP</div>
+                    <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:45%"></div></div>
+                    <div class="xp-next" id="xp-text">45/100</div>
                 </div>
 
                 <!-- STATS -->
                 <div class="stats">
-                <div class="stat-row">
-                    <div class="stat-icon">🍪</div>
-                    <div class="stat-label">Hunger</div>
-                    <div class="bar-track"><div class="bar-fill hunger" id="bar-hunger" style="width:60%"></div></div>
-                    <div class="stat-val" id="val-hunger">60</div>
-                </div>
-                <div class="stat-row">
-                    <div class="stat-icon">💖</div>
-                    <div class="stat-label">Happy</div>
-                    <div class="bar-track"><div class="bar-fill happy" id="bar-happy" style="width:75%"></div></div>
-                    <div class="stat-val" id="val-happy">75</div>
-                </div>
-                <div class="stat-row">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-label">Energy</div>
-                    <div class="bar-track"><div class="bar-fill energy" id="bar-energy" style="width:80%"></div></div>
-                    <div class="stat-val" id="val-energy">80</div>
-                </div>
-                <div class="stat-row">
-                    <div class="stat-icon">📚</div>
-                    <div class="stat-label">Focus</div>
-                    <div class="bar-track"><div class="bar-fill focus" id="bar-focus" style="width:50%"></div></div>
-                    <div class="stat-val" id="val-focus">50</div>
-                </div>
+                    <div class="stat-row">
+                        <div class="stat-icon">🍪</div>
+                        <div class="stat-label">Hunger</div>
+                        <div class="bar-track"><div class="bar-fill hunger" id="bar-hunger" style="width:60%"></div></div>
+                        <div class="stat-val" id="val-hunger">60</div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-icon">💖</div>
+                        <div class="stat-label">Happy</div>
+                        <div class="bar-track"><div class="bar-fill happy" id="bar-happy" style="width:75%"></div></div>
+                        <div class="stat-val" id="val-happy">75</div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-label">Energy</div>
+                        <div class="bar-track"><div class="bar-fill energy" id="bar-energy" style="width:80%"></div></div>
+                        <div class="stat-val" id="val-energy">80</div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-label">Focus</div>
+                        <div class="bar-track"><div class="bar-fill focus" id="bar-focus" style="width:50%"></div></div>
+                        <div class="stat-val" id="val-focus">50</div>
+                    </div>
                 </div>
 
                 <!-- ACTIONS -->
                 <div class="actions">
-                <button class="action-btn btn-feed"  onclick="doAction('feed')">🍪 Feed</button>
-                <button class="action-btn btn-play"  onclick="doAction('play')">🎾 Play</button>
-                <button class="action-btn btn-study" onclick="doAction('study')">📖 Study</button>
-                <button class="action-btn btn-sleep" onclick="doAction('sleep')">🌙 Sleep</button>
+                    <button class="action-btn btn-feed"  onclick="doAction('feed')">🍪 Feed</button>
+                    <button class="action-btn btn-play"  onclick="doAction('play')">🎾 Play</button>
+                    <button class="action-btn btn-study" onclick="doAction('study')">📖 Study</button>
+                    <button class="action-btn btn-sleep" onclick="doAction('sleep')">🌙 Sleep</button>
                 </div>
 
                 <div class="status-tag" id="status-tag">● Idle · feeling good</div>
