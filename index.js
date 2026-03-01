@@ -129,6 +129,21 @@ function setStat(name, val) {
   document.getElementById('val-' + name).textContent = Math.round(val);
 }
 
+function spawnHeart() {
+  const scene = document.getElementById('scene');
+  const h = document.createElement('div');
+  h.className = 'heart-particle';
+  h.textContent = ['💖','✨','🌸','⭐','💕','🌟'][Math.floor(Math.random()*6)];
+  const angle = Math.random() * 2 * Math.PI;
+  const radius = 15 + Math.random() * 20;
+  h.style.left = (50 + Math.cos(angle) * radius * 0.7) + '%';
+  h.style.top  = (50 + Math.sin(angle) * radius) + '%';
+  h.style.setProperty('--dx', (Math.cos(angle) * 50) + 'px');
+  h.style.setProperty('--dy', (Math.sin(angle) * 50 - 50) + 'px');
+  scene.appendChild(h);
+  setTimeout(() => h.remove(), 900);
+}
+
 function showBubble(text, duration = 2200) {
   const b = document.getElementById('bubble');
   b.textContent = text;
