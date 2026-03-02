@@ -59,17 +59,6 @@ const state = {
   tapCount: 0
 };
 
-const messages = {
-  idle:     ["I'm bored... 🥺", "Pet me! 🐾", "Wanna study together? 📚", "Can I have a snack? 🍪"],
-  hungry:   ["Feed me please! 😿", "My tummy's rumbling... 🍽️", "Cookie? 🍪"],
-  sad:      ["I feel lonely 😢", "Play with me? 🎾", "Cheer me up? 💔"],
-  eating:   ["Nom nom nom! 😋", "Yummy!! ✨", "More please! 🍪"],
-  playing:  ["Wheee!! 🎉", "This is SO fun! 🎾", "Yay yay yay! ⭐"],
-  studying: ["Learning hard! 🧠", "Almost got it...📖", "Focus focus... 🎯"],
-  happy:    ["I love you!! 💖", "Best day ever! ✨", "Squeee! 🌸"],
-  levelup:  ["I LEVELED UP!! 🎊", "Look at me grow! ⭐", "Woohoo!! 🎉"]
-};
-
 // ── Image animation ───────────────────────────────────────────
 
 const imageAnim = {
@@ -161,7 +150,33 @@ function setLoopAnimation(action) {
 }
 
 function startStudyAnimation() {
-  setLoopAnimation('studying');
+  const urls = petImages.studying;
+  if (!urls || urls.length === 0) return;
+
+  const img = getOverlayImg();
+  img.style.display = 'block';
+  clearInterval(imageAnim.frameInterval);
+  imageAnim.frameIndex = 0;
+  img.src = urls[0];
+
+  if (urls.length === 1) return;
+
+  // First pass: study1 -> study10 exactly once.
+  // Then loop: study3 -> study10.
+  imageAnim.frameInterval = setInterval(() => {
+    if (imageAnim.frameIndex < urls.length - 1) {
+      imageAnim.frameIndex++;
+      img.src = urls[imageAnim.frameIndex];
+      return;
+    }
+
+    if (urls.length > 2) {
+      imageAnim.frameIndex = 2; // study3
+    } else {
+      imageAnim.frameIndex = 0;
+    }
+    img.src = urls[imageAnim.frameIndex];
+  }, 1000 / imageAnim.fps);
 }
 
 function stopStudyAnimation() {
@@ -214,6 +229,7 @@ function spawnHeart() {
 }
 
 function showBubble(text, duration = 2200) {
+  if (!text) return;
   const b = document.getElementById('bubble');
   b.textContent = text;
   b.classList.add('show');
