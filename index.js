@@ -150,6 +150,9 @@ function setLoopAnimation(action) {
 }
 
 function startStudyAnimation() {
+  const panel = document.querySelector('.panel');
+  if (!panel || !panel.classList.contains('study-active')) return;
+
   const urls = petImages.studying;
   if (!urls || urls.length === 0) return;
 
@@ -164,7 +167,7 @@ function startStudyAnimation() {
   // First pass: study1 -> study10 exactly once.
   // Then loop: study3 -> study10.
   let study3HoldTicks = 0;
-  const STUDY3_HOLD_TICKS = 3;
+  const STUDY3_HOLD_TICKS = 8;
   imageAnim.frameInterval = setInterval(() => {
     if (imageAnim.frameIndex === 2 && study3HoldTicks < STUDY3_HOLD_TICKS) {
       study3HoldTicks++;
@@ -195,7 +198,9 @@ function hidePetImage() {
   clearInterval(imageAnim.frameInterval);
   imageAnim.frameInterval = null;
 
-  if (pomodoroState.isRunning) {
+  const panel = document.querySelector('.panel');
+  const isStudyModeActive = !!panel && panel.classList.contains('study-active');
+  if (pomodoroState.isRunning && isStudyModeActive) {
     startStudyAnimation();
     return;
   }
@@ -235,16 +240,6 @@ function spawnHeart() {
   scene.appendChild(h);
   setTimeout(() => h.remove(), 900);
 }
-
-function showBubble(text, duration = 2200) {
-  if (!text) return;
-  const b = document.getElementById('bubble');
-  b.textContent = text;
-  b.classList.add('show');
-  setTimeout(() => b.classList.remove('show'), duration);
-}
-
-function randomOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function addXP(amount) {
   state.xp += amount;
@@ -299,7 +294,7 @@ function startPomodoro() {
   pomodoroState.timerId = setInterval(() => {
     if (pomodoroState.remainingSeconds <= 0) {
       pausePomodoro();
-      showBubble('Focus session complete! 🎉', 2200);
+      updateStatusTag('✅ Focus session complete!');
       updatePomodoroDisplay();
       return;
     }
@@ -336,6 +331,7 @@ function exitStudyMode() {
   const panel = document.querySelector('.panel');
   if (!panel) return;
   panel.classList.remove('study-active');
+  stopStudyAnimation();
   updateStatusTag('● Idle · feeling good');
 }
 
@@ -422,9 +418,7 @@ function executeFeedAction() {
   state.isBusy = true;
   renderDefaultActions();
   setButtonsDisabled(true);
-
   setAnimation('eating');
-  showBubble(randomOf(messages.eating), 2000);
   updateStatusTag('🍪 Eating a snack...');
   setStat('hunger', state.hunger + 30);
   setStat('happy',  state.happy  + 10);
@@ -493,7 +487,6 @@ function executePlayAction() {
   setButtonsDisabled(true);
 
   setAnimation('playing');
-  showBubble(randomOf(messages.playing), 2500);
   updateStatusTag('🎾 Playing around!');
   setStat('happy',  state.happy  + 25);
   setStat('hunger', state.hunger - 10);
@@ -506,14 +499,10 @@ function petTap() {
   state.tapCount++;
   spawnHeart();
   setStat('happy', state.happy + 5);
-
   if (state.tapCount % 5 === 0) {
     setAnimation('petting');
-    showBubble(randomOf(messages.happy), 2000);
     addXP(3);
     setTimeout(hidePetImage, 2200);
-  } else {
-    showBubble(randomOf(messages.idle), 1800);
   }
 }
 
@@ -525,15 +514,6 @@ setInterval(() => {
   }
 }, 30000);
 
-// idle chatter every 15s
-setInterval(() => {
-  if (!state.isBusy) {
-    let pool = messages.idle;
-    if (state.hunger < 30) pool = messages.hungry;
-    else if (state.happy < 30) pool = messages.sad;
-    showBubble(randomOf(pool), 2000);
-  }
-}, 15000);
 
 // Show idle image on load
 initIdleImage();
