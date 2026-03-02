@@ -260,8 +260,9 @@ body{
 }
 
 .action-draggable {
-  width: 100%;
-  height: 100%;
+  width: min(100%, 280px);
+  height: auto;
+  max-height: 100%;
   cursor: grab;
   user-select: none;
   -webkit-user-drag: element;
@@ -380,6 +381,10 @@ body{
   .action-btn {
     font-size: 1.45rem;
     padding: 14px;
+  }
+
+  .action-draggable {
+    width: min(100%, 220px);
   }
 }
 

@@ -13,6 +13,7 @@ const petImages = {
     'assets/eat2.png',
     'assets/eat3.png',
     'assets/eat4.png',
+    
     'assets/eat5.png',
     'assets/eat6.png',
     'assets/eat7.png'
@@ -22,7 +23,7 @@ const petImages = {
     'assets/play2.png',
     'assets/play3.png',
     'assets/play4.png',
-    'assets/play5.png',
+
     'assets/play6.png',
     'assets/play7.png',
     'assets/play8.png',
@@ -34,6 +35,18 @@ const petImages = {
     'assets/pet3.png',
     'assets/pet2.png',
     'assets/pet1.png'
+  ],
+  studying: [
+    'assets/study1.png',
+    'assets/study2.png',
+    'assets/study3.png',
+    'assets/study4.png',
+    'assets/study5.png',
+    'assets/study6.png',
+    'assets/study7.png',
+    'assets/study8.png',
+    'assets/study9.png',
+    'assets/study10.png'
   ],
 
 };
@@ -129,9 +142,40 @@ function setAnimation(action) {
   }
 }
 
+function setLoopAnimation(action) {
+  const urls = petImages[action];
+  if (!urls || urls.length === 0) return;
+
+  const img = getOverlayImg();
+  img.style.display = 'block';
+  clearInterval(imageAnim.frameInterval);
+  imageAnim.frameIndex = 0;
+  img.src = urls[0];
+
+  if (urls.length > 1) {
+    imageAnim.frameInterval = setInterval(() => {
+      imageAnim.frameIndex = (imageAnim.frameIndex + 1) % urls.length;
+      img.src = urls[imageAnim.frameIndex];
+    }, 1000 / imageAnim.fps);
+  }
+}
+
+function startStudyAnimation() {
+  setLoopAnimation('studying');
+}
+
+function stopStudyAnimation() {
+  hidePetImage();
+}
+
 function hidePetImage() {
   clearInterval(imageAnim.frameInterval);
   imageAnim.frameInterval = null;
+
+  if (pomodoroState.isRunning) {
+    startStudyAnimation();
+    return;
+  }
 
   if (petImages.idle) {
     const img = getOverlayImg();
@@ -226,6 +270,7 @@ function updatePomodoroDisplay() {
 function startPomodoro() {
   if (pomodoroState.isRunning) return;
   pomodoroState.isRunning = true;
+  startStudyAnimation();
   updatePomodoroDisplay();
   pomodoroState.timerId = setInterval(() => {
     if (pomodoroState.remainingSeconds <= 0) {
@@ -245,6 +290,7 @@ function pausePomodoro() {
     clearInterval(pomodoroState.timerId);
     pomodoroState.timerId = null;
   }
+  stopStudyAnimation();
   updatePomodoroDisplay();
 }
 
