@@ -163,7 +163,14 @@ function startStudyAnimation() {
 
   // First pass: study1 -> study10 exactly once.
   // Then loop: study3 -> study10.
+  let study3HoldTicks = 0;
+  const STUDY3_HOLD_TICKS = 3;
   imageAnim.frameInterval = setInterval(() => {
+    if (imageAnim.frameIndex === 2 && study3HoldTicks < STUDY3_HOLD_TICKS) {
+      study3HoldTicks++;
+      return;
+    }
+
     if (imageAnim.frameIndex < urls.length - 1) {
       imageAnim.frameIndex++;
       img.src = urls[imageAnim.frameIndex];
@@ -172,6 +179,7 @@ function startStudyAnimation() {
 
     if (urls.length > 2) {
       imageAnim.frameIndex = 2; // study3
+      study3HoldTicks = 0;
     } else {
       imageAnim.frameIndex = 0;
     }
