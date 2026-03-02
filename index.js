@@ -64,7 +64,7 @@ const state = {
 const imageAnim = {
   frameInterval: null,
   frameIndex: 0,
-  fps: 3, // frames per second — adjust to taste
+  fps: 4, // frames per second — adjust to taste
 };
 const FEED_ICON_SRC = 'assets/feedIcon.png';
 const PLAY_ICON_SRC = 'assets/playIcon.png';
